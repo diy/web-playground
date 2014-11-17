@@ -1,0 +1,27 @@
+{
+  "name": "diy-web-playground",
+  "version": "1.0.0",
+  "description": "Play with web examples in a DIY friendly environment.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "web-playground": "bin/web-playground"
+  },
+  "author": "Derek Reynolds <drk@diy.org>",
+  "license": "APACHE 2",
+  "dependencies": {
+    "apex-rounded-web": "git+ssh://git@github.com:diy/apex-rounded-web",
+    "beefy": "^2.1.1",
+    "browserify": "^6.3.2",
+    "diy-icons": "git://github.com/diy/icons",
+    "hyperglue": "^1.3.3",
+    "hyperscript": "^1.4.2",
+    "packify-css": "^1.0.0",
+    "tmp": "0.0.24"
+  },
+  "devDependencies": {
+    "async": "^0.9.0"
+  }
+}

@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+var fs = require('fs');
+var async = require('async');
+var beefy = require('beefy');
+var http = require('http');
+var tmp = require('tmp');
+
+var icons = require('../lib/icons');
+var fonts = require('../lib/fonts');
+var wrap = require('../lib/wrap');
+
+var base = process.cwd();
+
+tmp.file({ postfix: '.html' }, function _tmpFileCreated (err, path, fd) {
+    async.auto({
+        content: function _content (callback) {
+            fs.readFile(base + '/_index.html', callback);
+        },
+        fonts: function _fonts (callback) { fonts(callback); },
+        icons: function _icons (callback) { icons(callback); },
+
+        html: ['content', 'fonts', 'icons', function _html (callback, obj) {
+            wrap({
+                fonts: obj.fonts.toString(),
+                icons: obj.icons.toString(),
+                content: obj.content.toString()
+            }, callback);
+        }]
+    }, function (err, obj) {
+        fs.writeFile(path, obj.html, function (err) {
+            http.createServer(beefy({
+                entries: { 'bundle.js': base + '/main.js' },
+                cwd: base,
+                // live: true,
+                quiet: false,
+                unhandled: on404,
+                index: path
+            }, function (err) {
+                console.log(err);
+            })).listen(8000);
+
+            function on404 (server, req, resp, parsed) {
+              resp.writeHead(404, {});
+              resp.end('sorry folks!');
+            }
+        });
+    });
+});
